@@ -1,0 +1,24 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/tentang', function () {
+    return view('tentang');
+
+});
+
+Route::get('/sapa/{$nama}', function ($nama) {
+    return "halo, $nama! selamat datang di toko online";
+});
+
+Route::get('/kategori/{$nama}', function ($nama = 'semua') {
+    return "menampilkan katagori: $nama";
+});
+
+Route::get('/produk/{id}', function ($id) {
+    return "Detail produk #$id";
+})->name('produk.detail');
