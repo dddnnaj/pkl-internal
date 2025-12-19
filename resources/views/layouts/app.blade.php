@@ -1,103 +1,60 @@
+{{-- ================================================
+     FILE: resources/views/layouts/app.blade.php
+     FUNGSI: Master layout untuk halaman customer/publik
+     ================================================ --}}
+
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-  
-  <head>
-    <meta charset="utf-8" />
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
-    
-    <title>{{ config('app.name', 'Toko Online') }}</title>
-  
-    <link rel="dns-prefetch" href="//fonts.bunny.net" />
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet" />
-    
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    
-  </head>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <body>
-    <div id="app">
-      
-      <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-       
+    {{-- CSRF Token untuk AJAX --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <div class="container">
-         
-          <a class="navbar-brand" href="{{ url('/') }}">
-            🛒 {{ config('app.name', 'Toko Online') }}
-          </a>
+    {{-- SEO Meta Tags --}}
+    <title>@yield('title', 'Toko Online') - {{ config('app.name') }}</title>
+    <meta name="description" content="@yield('meta_description', 'Toko online terpercaya dengan produk berkualitas')">
 
-        
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
+    {{-- Favicon --}}
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
 
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          
-            <ul class="navbar-nav me-auto"></ul>
+    {{-- Google Fonts --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-           
-            <ul class="navbar-nav ms-auto">
-             @guest 
-              @if (Route::has('login'))
-              <li class="nav-item">
-                <a class="nav-link" href="{{ route('login') }}"> Login </a>
-              </li>
-              @endif @if (Route::has('register'))
-              <li class="nav-item">
-                <a class="nav-link" href="{{ route('register') }}">
-                  Register
-                </a>
-              </li>
-              @endif @else 
+    {{-- Vite CSS --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-              <li class="nav-item dropdown">
-                <a
-                  id="navbarDropdown"
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                >
-                  {{ Auth::user()->name }} 
-                </a>
+    {{-- Stack untuk CSS tambahan per halaman --}}
+    @stack('styles')
+</head>
+<body>
+    {{-- ============================================
+         NAVBAR
+         ============================================ --}}
+    @include('partials.navbar')
 
-                <div class="dropdown-menu dropdown-menu-end">
-                
-                  <a
-                    class="dropdown-item"
-                    href="{{ route('logout') }}"
-                    onclick="event.preventDefault();
-                                                document.getElementById('logout-form').submit();"
-                  >
-                    Logout
-                  </a>
-        
-                  <form
-                    id="logout-form"
-                    action="{{ route('logout') }}"
-                    method="POST"
-                    class="d-none"
-                  >
-                    @csrf 
-                  </form>
-                </div>
-              </li>
-              @endguest
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <main class="py-4">
-        @yield('content')
-      </main>
+    {{-- ============================================
+         FLASH MESSAGES
+         ============================================ --}}
+    <div class="container mt-3">
+        @include('partials.flash-messages')
     </div>
-  </body>
+
+    {{-- ============================================
+         MAIN CONTENT
+         ============================================ --}}
+    <main class="min-vh-100">
+        @yield('content')
+    </main>
+
+    {{-- ============================================
+         FOOTER
+         ============================================ --}}
+    @include('partials.footer')
+
+    {{-- Stack untuk JS tambahan per halaman --}}
+    @stack('scripts')
+</body>
 </html>
