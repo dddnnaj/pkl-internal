@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Middleware\AdminMiddleware;
+use Illuminate\Foundation\Configuration\Middleware;
+
+
 
 
 Route::get('/', function () {
@@ -106,7 +110,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('dashboard/', [DashboardController::class, 'index'])->name('dashboard');
 
     // Produk CRUD
     Route::resource('products', AdminProductController::class);
