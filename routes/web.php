@@ -7,9 +7,6 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Foundation\Configuration\Middleware;
 
-
-
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -72,6 +69,7 @@ use App\Http\Controllers\WishlistController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Katalog Produk
+Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog.index');
 Route::get('/products', [CatalogController::class, 'index'])->name('catalog.index');
 Route::get('/products/{slug}', [CatalogController::class, 'show'])->name('catalog.show');
 
@@ -145,4 +143,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // ...
 });
 
-
+Route::middleware('auth')->group(function () {
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+});
