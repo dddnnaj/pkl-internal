@@ -26,25 +26,25 @@ class OrderController extends Controller
     /**
      * Menampilkan detail satu pesanan.
      */
-   public function show(Order $order)
-{
-    $order->load(['items', 'user']);
+    public function show(Order $order)
+    {
+        $order->load(['items', 'user']);
 
-    $snapToken = $order->snap_token; // ambil dulu dari DB
+        $snapToken = $order->snap_token; // ambil dulu dari DB
 
-    if ($order->status === 'pending' && !$snapToken) {
-        // Generate baru jika belum ada
-        $midtrans = new \App\Services\MidtransService(); // atau inject
-        $snapToken = $midtrans->createSnapToken($order);
+        if ($order->status === 'pending' && ! $snapToken) {
+                                                              // Generate baru jika belum ada
+            $midtrans  = new \App\Services\MidtransService(); // atau inject
+            $snapToken = $midtrans->createSnapToken($order);
 
-        if ($snapToken) {
-            // SIMPAN KE DATABASE — INI YANG PALING PENTING!
-            $order->update(['snap_token' => $snapToken]);
+            if ($snapToken) {
+                // SIMPAN KE DATABASE — INI YANG PALING PENTING!
+                $order->update(['snap_token' => $snapToken]);
+            }
         }
-    }
 
-    return view('orders.show', compact('order', 'snapToken'));
-}
+        return view('orders.show', compact('order', 'snapToken'));
+    }
 
     /**
      * Menampilkan halaman status pembayaran sukses.

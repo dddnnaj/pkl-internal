@@ -3,12 +3,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderPaidEvent;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Events\OrderPaidEvent;
-
 
 class MidtransNotificationController extends Controller
 {
@@ -147,18 +146,6 @@ class MidtransNotificationController extends Controller
                 $this->handleRefund($order, $payment);
                 break;
 
-
-            case 'expire':
-            case 'cancel':
-               if ($order->status !== 'cancelled') {
-                  // Restock Logic
-                  foreach ($order->items as $item) {
-                      $item->product->increment('stock', $item->quantity);
-                  }
-             $order->update(['payment_status' => 'failed', 'status' => 'cancelled']);
-            }
-            break;
-
             default:
                 Log::info("Midtrans Notification: Unknown status", [
                     'order_id' => $orderId,
@@ -193,8 +180,8 @@ class MidtransNotificationController extends Controller
             ]);
         }
 
-        // TODO: Kirim email konfirmasi pembayaran
-        // event(new PaymentSuccessful($order));
+        // Trigger event untuk kirim email konfirmasi pembayaran
+        event(new OrderPaidEvent($order));
     }
 
     /**
@@ -251,11 +238,4 @@ class MidtransNotificationController extends Controller
 
         // TODO: Logic tambahan untuk refund
     }
-    private function setSuccess(Order $order)
-{
-    $order->update([]);
-
-    // Fire & Forget
-    event(new OrderPaidEvent($order));
-}
 }
