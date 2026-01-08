@@ -1,98 +1,176 @@
 @extends('layouts.app')
 
+@section('title', 'Register - Instax Shop')
+
+@push('styles')
+<style>
+    .auth-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        background: linear-gradient(135deg, #dff3f1, #f5efe6);
+    }
+
+    .auth-card {
+        border-radius: 28px;
+        border: none;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .auth-header {
+        background: linear-gradient(135deg, #f39c12, #e67e22);
+        color: #fff;
+        padding: 32px;
+        text-align: center;
+    }
+
+    .auth-header h4 {
+        font-weight: 800;
+        margin-bottom: 6px;
+    }
+
+    .auth-header p {
+        opacity: 0.9;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .form-control {
+        border-radius: 14px;
+        padding: 14px 16px;
+    }
+
+    .form-control:focus {
+        border-color: #f39c12;
+        box-shadow: 0 0 0 0.2rem rgba(243,156,18,0.25);
+    }
+
+    .btn-auth {
+        background: #f39c12;
+        color: #fff;
+        border-radius: 16px;
+        font-weight: 700;
+        padding: 14px;
+        transition: 0.3s;
+    }
+
+    .btn-auth:hover {
+        background: #e67e22;
+        transform: translateY(-2px);
+    }
+
+    .google-btn {
+        border-radius: 16px;
+        padding: 12px;
+        font-weight: 600;
+    }
+</style>
+@endpush
+
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
+<div class="auth-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-6">
+                <div class="card auth-card">
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
+                    {{-- HEADER --}}
+                    <div class="auth-header">
+                        <h4>✨ Buat Akun Baru</h4>
+                        <p>Daftar dan mulai abadikan momen bersama Instax</p>
+                    </div>
 
-                        <div class="row mb-3">
-                            <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
+                    {{-- BODY --}}
+                    <div class="card-body p-4 p-md-5">
+                        <form method="POST" action="{{ route('register') }}">
+                            @csrf
 
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
+                            {{-- NAME --}}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Nama Lengkap</label>
+                                <input type="text"
+                                       class="form-control @error('name') is-invalid @enderror"
+                                       name="name"
+                                       value="{{ old('name') }}"
+                                       placeholder="Nama lengkap"
+                                       required autofocus>
                                 @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
+                            {{-- EMAIL --}}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Email</label>
+                                <input type="email"
+                                       class="form-control @error('email') is-invalid @enderror"
+                                       name="email"
+                                       value="{{ old('email') }}"
+                                       placeholder="nama@email.com"
+                                       required>
                                 @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
+                            {{-- PASSWORD --}}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Password</label>
+                                <input type="password"
+                                       class="form-control @error('password') is-invalid @enderror"
+                                       name="password"
+                                       placeholder="Minimal 8 karakter"
+                                       required>
                                 @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                <span class="invalid-feedback">{{ $message }}</span>
                                 @enderror
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                            {{-- CONFIRM PASSWORD --}}
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Konfirmasi Password</label>
+                                <input type="password"
+                                       class="form-control"
+                                       name="password_confirmation"
+                                       placeholder="Ulangi password"
+                                       required>
                             </div>
-                        </div>
 
-                        <div class="position-relative my-4">
-                         <hr />
-                         <span
-                           class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted"
-                         >
-                           atau daftar dengan
-                         </span>
-                       </div>
-                       
-                       <div class="d-grid gap-2">
-                         <a href="{{ route('auth.google') }}" class="btn btn-outline-danger btn-lg">
-                           <svg class="me-2" width="20" height="20" viewBox="0 0 24 24">
-                           </svg>
-                           Daftar dengan Google
-                         </a>
-                       </div>
-                       
-                       <p class="mt-4 text-center mb-0">
-                         Sudah punya akun?
-                         <a href="{{ route('login') }}" class="text-decoration-none fw-bold">
-                           Login
-                         </a>
-                       </p>
-                
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
+                            {{-- BUTTON REGISTER --}}
+                            <div class="d-grid mb-4">
+                                <button type="submit" class="btn btn-auth btn-lg">
+                                    Daftar Sekarang
                                 </button>
                             </div>
-                        </div>
-                    </form>
+
+                            {{-- DIVIDER --}}
+                            <div class="position-relative my-4">
+                                <hr>
+                                <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted">
+                                    atau daftar dengan
+                                </span>
+                            </div>
+
+                            {{-- GOOGLE --}}
+                            <div class="d-grid mb-3">
+                                <a href="{{ route('auth.google') }}" class="btn btn-outline-danger google-btn">
+                                    <img src="https://www.svgrepo.com/show/475656/google-color.svg"
+                                         width="20" class="me-2">
+                                    Daftar dengan Google
+                                </a>
+                            </div>
+
+                            {{-- LOGIN --}}
+                            <p class="text-center mb-0">
+                                Sudah punya akun?
+                                <a href="{{ route('login') }}" class="fw-bold text-decoration-none">
+                                    Login
+                                </a>
+                            </p>
+                        </form>
+                    </div>
+
                 </div>
             </div>
         </div>
